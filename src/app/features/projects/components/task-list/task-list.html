@@ -1,0 +1,9 @@
+<div class="mt-4 space-y-2">
+  @for (task of tasks; track task.title) {
+    <div class="p-2 border-l-4 {{ getStatusColor(task.status) }} bg-gray-50 rounded">
+      <p class="font-semibold">{{ task.title }}</p>
+      <p>Priorité : {{ task.priority }}</p>
+      <p>Statut : {{ task.status }}</p>
+    </div>
+  }
+</div>
