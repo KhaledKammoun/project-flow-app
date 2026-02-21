@@ -1,0 +1,58 @@
+@if (project) {
+  <div
+    class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm animate-fadeIn"
+    (click)="closeModal()"
+  >
+    <div
+      class="relative w-full max-w-lg mx-4 bg-white rounded-2xl shadow-2xl p-6 animate-scaleIn"
+      (click)="$event.stopPropagation()"
+    >
+
+      <!-- Close button -->
+      <button
+        class="absolute top-4 right-4 text-gray-400 hover:text-gray-700 transition cursor-pointer"
+        (click)="closeModal()"
+      >
+        ✖
+      </button>
+
+      <!-- Header -->
+      <div class="mb-4">
+        <h2 class="text-2xl font-bold tracking-tight">
+          {{ project.name }}
+        </h2>
+
+        <!-- Status Badge -->
+        <div class="shrink-0 mt-2 whitespace-nowrap inline-flex items-center gap-3 px-3 py-1 rounded-full {{ getStatusColor(project.status) }}">
+          <span
+            class="w-3 h-3 rounded-full {{ getBulletColor(project.status) }}">
+          </span>
+          <span class="text-xs font-medium">
+            {{ project.status }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Divider -->
+      <div class="border-t my-4"></div>
+
+      <!-- Content -->
+      <p class="text-gray-700 leading-relaxed">
+        {{ project.description }}
+      </p>
+
+      <!-- Actions -->
+      <div class="flex justify-end gap-3 mt-6">
+        <app-button
+          variant="secondary"
+          size="md"
+          type="button"
+          (click)="closeModal()"
+        >
+          Close
+        </app-button>
+      </div>
+
+    </div>
+  </div>
+}

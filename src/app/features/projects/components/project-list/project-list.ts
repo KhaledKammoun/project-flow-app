@@ -1,13 +1,18 @@
-import { Component } from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {TaskList} from '../task-list/task-list';
-import {IProject} from '../../../../types/project-types';
+import {IProject, Status, StatusValues} from '../../../../types/project-types';
 import {Button} from '../button/button';
+import {ProjectDetails} from '../project-details/project-details';
+import {getBulletColor, getStatusColor} from '../../../../utils/util';
+import {FormsModule} from '@angular/forms';
 
 @Component({
   selector: 'app-project-list',
   imports: [
     TaskList,
     Button,
+    ProjectDetails,
+    FormsModule
   ],
   templateUrl: './project-list.html',
   styleUrl: './project-list.css',
@@ -15,6 +20,7 @@ import {Button} from '../button/button';
 export class ProjectList {
   projects: IProject[] = [
     {
+      id: 0,
       name: 'Website Redesign',
       description: 'Refonte complète du site web pour améliorer l’UX et la vitesse de chargement.',
       status: 'En cours',
@@ -26,6 +32,7 @@ export class ProjectList {
       ]
     },
     {
+      id: 1,
       name: 'Campagne Marketing Q1',
       description: 'Planification et exécution de la campagne marketing pour le premier trimestre.',
       status: 'En attente',
@@ -37,6 +44,7 @@ export class ProjectList {
       ]
     },
     {
+      id: 2,
       name: 'Application Mobile',
       description: 'Développement de l’application mobile pour iOS et Android.',
       status: 'En cours',
@@ -49,6 +57,7 @@ export class ProjectList {
       ]
     },
     {
+      id: 3,
       name: 'Migration Base de Données',
       description: 'Migration des données legacy vers la nouvelle architecture sécurisée.',
       status: 'Terminé',
@@ -60,6 +69,7 @@ export class ProjectList {
       ]
     },
     {
+      id: 4,
       name: 'Onboarding Nouveaux Employés',
       description: 'Création du processus d’intégration pour les nouveaux employés.',
       status: 'En attente',
@@ -71,24 +81,28 @@ export class ProjectList {
     }
   ];
 
+  project: IProject | null = null;
 
-  getStatusColor(status: string): string {
-    switch (status) {
-      case 'En attente': return 'bg-yellow-100 text-yellow-700';
-      case 'En cours': return 'bg-blue-100 text-blue-700';
-      case 'Terminé': return 'bg-green-100 text-green-700';
-      default: return 'bg-gray-100 text-gray-700';
-    }
-  }
-
-  getBulletColor(status: string): string {
-    switch (status) {
-      case 'En attente': return 'bg-yellow-300 text-yellow-900';
-      case 'En cours': return 'bg-blue-300 text-blue-900';
-      case 'Terminé': return 'bg-green-300 text-green-900';
-      default: return 'bg-gray-300 text-gray-700';
-    }
+  openProjectDetails = (projectId: number) => {
+    this.project = this.projects.find((p) => p.id === projectId) || null;
   }
 
 
+  searched_project: string = "";
+  selected_status: Status | 'All' = 'All';
+  resetStatus= () => {
+    this.selected_status = "All";
+  }
+
+
+  get filtered_projects(): IProject[] {
+    return this.projects.filter(p =>
+      (this.selected_status === 'All' || !this.selected_status || p.status === this.selected_status) &&
+      p.name.toLowerCase().includes(this.searched_project.toLowerCase())
+    );
+  }
+
+  protected readonly StatusValues = StatusValues;
+  protected readonly getBulletColor = getBulletColor;
+  protected readonly getStatusColor = getStatusColor;
 }

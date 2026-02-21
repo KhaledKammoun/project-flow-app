@@ -1,56 +1,103 @@
-<div class="flex-1 w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-  @for (project of projects; track project.name) {
+<div class="flex flex-col gap-6">
+  <!-- Header Section -->
+  <div class="flex flex-col md:flex-row md:items-center md:justify-start gap-4">
 
-    <div class="group bg-white border rounded-xl p-5 flex flex-col justify-between transition hover:shadow-lg">
+    <!-- Search -->
+    <input
+      type="text"
+      placeholder="Search project..."
+      [(ngModel)]="searched_project"
+      class="w-full md:w-80 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+    />
 
-      <!-- Header -->
-      <div class="flex items-start justify-between mb-4">
+    <!-- Filter -->
+    <select
+      [(ngModel)]="selected_status"
+      class="px-4 py-2  border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+    >
+      <option value="All">All</option>
+      @for (status of StatusValues; track status) {
+        <option value="{{status}}">{{status}}</option>
+      }
+    </select>
+
+    @if (searched_project.length > 0 || selected_status) {
+        <app-button
+          variant="secondary"
+          size="md"
+          type="button"
+          (click)="searched_project = ''; resetStatus()"
+        >
+          Clear Filters
+        </app-button>
+    }
+
+  </div>
+  <div class="flex-1 w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    @for (project of filtered_projects; track project.name) {
+
+      <div class="group bg-white border rounded-xl p-5 flex flex-col justify-between transition hover:shadow-lg">
+
+        <!-- Header -->
         <div class="flex items-start justify-between mb-4">
-          <div>
+
+          <!-- Left Side -->
+          <div class="flex-1 min-w-0">
             <h2 class="text-lg font-semibold tracking-tight">
               {{ project.name }}
             </h2>
-            <p class="text-sm text-gray-500 mt-1 line-clamp-2">
+            <p class="text-sm text-gray-500 mt-1 truncate"
+               [title]="project.description"
+            >
               {{ project.description }}
             </p>
           </div>
+
+          <!-- Status Badge -->
+          <div class="shrink-0 whitespace-nowrap flex items-center gap-3 px-3 py-1 rounded-full {{ getStatusColor(project.status) }}">
+            <span
+              class="w-3 h-3 rounded-full {{ getBulletColor(project.status) }}">
+            </span>
+                  <span class="text-xs font-medium">
+              {{ project.status }}
+            </span>
+          </div>
+
         </div>
 
-        <!-- Status Badge -->
-        <div class="flex items-center gap-3 px-3 py-1 rounded-full {{ getStatusColor(project.status) }}">
-          <span
-            class="w-3 h-3 rounded-full {{ getBulletColor(project.status) }}"></span>
-          <span
-            class="text-xs font-medium "
-          >
-            {{ project.status }}
-          </span>
+        <!-- Tasks -->
+        <div class="mb-4">
+          <app-task-list [tasks]="project.tasks"></app-task-list>
         </div>
-      </div>
 
-      <!-- Tasks -->
-      <div class="mb-4">
-        <app-task-list [tasks]="project.tasks"></app-task-list>
-      </div>
-
-      <!-- Actions -->
-      <div class="flex items-center justify-between pt-4 border-t">
-        <app-button variant="secondary" size="md" type="button">
-          View
-        </app-button>
-
-        <div class="flex items-center gap-3">
-          <app-button variant="secondary" size="md" type="button">
-            Edit
+        <!-- Actions -->
+        <div class="flex items-center justify-between pt-4 border-t">
+          <app-button (click)="openProjectDetails(project.id)" variant="secondary" size="md" type="button">
+            View
           </app-button>
 
-          <app-button variant="danger" size="md" type="button">
-            Delete
-          </app-button>
+          <div class="flex items-center gap-3">
+            <app-button variant="secondary" size="md" type="button">
+              Edit
+            </app-button>
+
+            <app-button variant="danger" size="md" type="button">
+              Delete
+            </app-button>
+          </div>
         </div>
+
       </div>
 
-    </div>
+    }
 
-  }
+    <!-- Project Details - PopUp -->
+    @if (project != null) {
+        <app-project-details
+          [project]="project"
+          (close)="project = null"
+        ></app-project-details>
+    }
+  </div>
+
 </div>

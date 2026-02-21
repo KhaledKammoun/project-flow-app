@@ -1,4 +1,10 @@
-export type Status = 'En cours' | 'En attente' | 'Terminé';
+export const StatusValues = [
+  'En cours',
+  'En attente',
+  'Terminé'
+] as const;
+
+export type Status = typeof StatusValues[number];
 
 interface ITask {
   title: string;
@@ -7,6 +13,7 @@ interface ITask {
 }
 
 interface IProject {
+  id: number;
   name: string;
   description: string;
   status: Status;

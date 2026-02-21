@@ -12,4 +12,6 @@ import {Footer} from './features/projects/components/footer/footer';
 })
 export class App {
   protected readonly title = signal('project-manager');
+
+  selectedProject: number = -1;
 }

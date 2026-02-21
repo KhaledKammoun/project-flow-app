@@ -1,5 +1,6 @@
 import {Component, Input} from '@angular/core';
 import {ITask} from '../../../../types/project-types';
+import {getStatusColor, getStatusColor_less_degree} from '../../../../utils/util';
 
 @Component({
   selector: 'app-task-list',
@@ -10,15 +11,6 @@ import {ITask} from '../../../../types/project-types';
 export class TaskList {
   @Input() tasks: ITask[] = [];
 
-  getStatusColor(status: string): string {
-    switch (status) {
-      case 'En attente': return 'border-yellow-500';
-      case 'En cours': return 'border-blue-500';
-      case 'Terminé': return 'border-green-500';
-      default: return 'border-gray-500';
-    }
-  }
-
   getPriorityColor(priority: string): string {
     switch (priority) {
       case 'High': return 'bg-red-500';
@@ -27,5 +19,8 @@ export class TaskList {
       default: return 'bg-gray-400';
     }
   }
+
+  protected readonly getStatusColor = getStatusColor;
+  protected readonly getStatusColor_less_degree = getStatusColor_less_degree;
 }
 
