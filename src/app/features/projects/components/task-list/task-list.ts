@@ -1,10 +1,14 @@
-import {Component, Input} from '@angular/core';
+import {Component, Input } from '@angular/core';
 import {ITask} from '../../../../types/project-types';
-import {getStatusColor, getStatusColor_less_degree} from '../../../../utils/util';
+import {LucideAngularModule} from 'lucide-angular';
+import {LucideDynamicIcon} from '@lucide/angular';
 
 @Component({
   selector: 'app-task-list',
-  imports: [],
+  imports: [
+    LucideAngularModule,
+    LucideDynamicIcon
+  ],
   templateUrl: './task-list.html',
   styleUrl: './task-list.css',
 })
@@ -19,8 +23,5 @@ export class TaskList {
       default: return 'bg-gray-400';
     }
   }
-
-  protected readonly getStatusColor = getStatusColor;
-  protected readonly getStatusColor_less_degree = getStatusColor_less_degree;
 }
 

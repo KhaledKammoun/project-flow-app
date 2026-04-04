@@ -1,18 +1,21 @@
 import {Component, Input} from '@angular/core';
-import {TaskList} from '../task-list/task-list';
 import {IProject, Status, StatusValues} from '../../../../types/project-types';
 import {Button} from '../button/button';
 import {ProjectDetails} from '../project-details/project-details';
-import {getBulletColor, getStatusColor} from '../../../../utils/util';
 import {FormsModule} from '@angular/forms';
+import {StatusColorPipe} from '../../../../pipes/status-color-pipe';
+import {NgClass} from '@angular/common';
+import {BulletStatusColorPipe} from '../../../../pipes/bullet-status-color-pipe';
 
 @Component({
   selector: 'app-project-list',
   imports: [
-    TaskList,
     Button,
     ProjectDetails,
-    FormsModule
+    FormsModule,
+    StatusColorPipe,
+    NgClass,
+    BulletStatusColorPipe
   ],
   templateUrl: './project-list.html',
   styleUrl: './project-list.css',
@@ -74,7 +77,7 @@ export class ProjectList {
       description: 'Création du processus d’intégration pour les nouveaux employés.',
       status: 'En attente',
       tasks: [
-        { title: 'Rédaction manuel interne', priority: 'Moyenne', status: 'En attente' },
+        { title: 'Rédaction manuel interne', priority: 'Moyenne', status: 'Terminé' },
         { title: 'Création vidéo tutoriel', priority: 'Moyenne', status: 'En attente' },
         { title: 'Organisation sessions onboarding', priority: 'Moyenne', status: 'En attente' }
       ]
@@ -94,7 +97,6 @@ export class ProjectList {
     this.selected_status = "All";
   }
 
-
   get filtered_projects(): IProject[] {
     return this.projects.filter(p =>
       (this.selected_status === 'All' || !this.selected_status || p.status === this.selected_status) &&
@@ -103,6 +105,4 @@ export class ProjectList {
   }
 
   protected readonly StatusValues = StatusValues;
-  protected readonly getBulletColor = getBulletColor;
-  protected readonly getStatusColor = getStatusColor;
 }
