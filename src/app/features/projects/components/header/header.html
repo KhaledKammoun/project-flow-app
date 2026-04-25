@@ -26,7 +26,7 @@
           Register
         </app-button>
       } @else {
-        <app-button variant="secondary" size="md" type="button">
+        <app-button (click)="setIsAddProjectOpen(true)" variant="secondary" size="md" type="button">
           + Add Project
         </app-button>
         <app-button variant="primary" size="md" type="button">
@@ -35,6 +35,9 @@
 
     }
   </div>
+
+
+
 </div>
 </header>
 

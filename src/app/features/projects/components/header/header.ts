@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {Logo} from '../logo/logo';
 import {Button} from '../button/button';
 
@@ -6,16 +6,19 @@ import {Button} from '../button/button';
   selector: 'app-header',
   imports: [
     Logo,
-    Button
+    Button,
   ],
   templateUrl: './header.html',
   styleUrl: './header.css',
 })
 export class Header {
   isAuthenticated: boolean = false;
+  @Input() setIsAddProjectOpen!: (isOpen: boolean) => void;
 
   toggleAuth() {
     this.isAuthenticated = !this.isAuthenticated;
   }
+
+
 
 }

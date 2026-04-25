@@ -13,7 +13,7 @@ export class Button {
 
   @Input() type: 'button' | 'submit' | 'reset' = 'button';
 
-  @Input() disabled = false;
+  @Input() disabled: boolean | null = false;
 
   get classes(): string {
     // Couleur / hover

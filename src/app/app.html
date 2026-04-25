@@ -8,10 +8,16 @@
 <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
 
 <main class="bg-gray-100 h-screen flex flex-col w-full">
-  <app-header></app-header>
+  <app-header [setIsAddProjectOpen]="setIsAddProjectOpen"></app-header>
 
   <div class="flex-1 overflow-auto p-4">
-    <app-project-list></app-project-list>
+    <app-project-list [addedProject]="latestAddedProject"></app-project-list>
+    @if(isAddProjectOpen) {
+      <app-add-project
+        (close)="setIsAddProjectOpen(false)"
+        (projectCreated)="onProjectCreated($event)"
+      ></app-add-project>
+    }
   </div>
 
   <app-footer></app-footer>
@@ -24,6 +30,5 @@
 <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
 <!-- * * * * * * * * * * End of Placeholder  * * * * * * * * * * * * -->
 <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
-
 
 <router-outlet />
