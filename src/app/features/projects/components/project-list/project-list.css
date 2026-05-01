@@ -3,3 +3,33 @@
   flex-direction: column;
   height: 100%;
 }
+
+/* Multi-select filter buttons */
+button[type="button"].active {
+  background-color: #3b82f6;
+  color: white;
+  border-color: #3b82f6;
+}
+
+button[type="button"]:not(.active):hover {
+  border-color: #3b82f6;
+  background-color: #f0f9ff;
+}
+
+/* Line clamp for descriptions */
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Smooth transitions for card */
+button[type="button"] {
+  transition: all 0.2s ease;
+}
+
+/* Task completion pipe style */
+.text-xs.text-gray-500 {
+  font-variant-numeric: tabular-nums;
+}

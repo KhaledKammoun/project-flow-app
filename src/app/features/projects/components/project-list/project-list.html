@@ -1,74 +1,108 @@
 <div class="flex flex-col gap-6 h-full">
   <!-- Header Section -->
-  <div class="flex flex-col md:flex-row md:items-center md:justify-start gap-4">
-    <!-- Search -->
-    <input
-      type="text"
-      placeholder="Search project..."
-      [(ngModel)]="searched_project"
-      class="w-full md:w-80 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
-    />
+  <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
+    <!-- Search and Status Filter Container -->
+    <div class="flex flex-col gap-3 flex-1">
+      <!-- Search -->
+      <input
+        type="text"
+        placeholder="Search project..."
+        [(ngModel)]="searched_project"
+        class="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition"
+      />
 
-    <!-- Filter -->
-    <select
-      [(ngModel)]="selected_status"
-      class="px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
-    >
-      <option value="All">All</option>
-      @for (status of StatusValues; track status) {
-      <option value="{{ status }}">{{ status }}</option>
+      <!-- Multi-Select Status Filter -->
+      <div class="flex flex-wrap gap-2 items-center">
+        <div class="text-sm font-medium text-gray-600 min-w-fit">Filter by status:</div>
+        @for (status of StatusValues; track status) {
+          <button
+            type="button"
+            (click)="toggleStatusFilter(status)"
+            [class.active]="selected_statuses.has(status)"
+            class="px-3 py-1.5 rounded-full text-sm font-medium transition border border-gray-300 hover:border-blue-500"
+            [ngClass]="selected_statuses.has(status) ? 'bg-blue-500 text-white border-blue-500' : 'bg-white text-gray-700'"
+          >
+            {{ status }}
+          </button>
+        }
+      </div>
+
+      <!-- Selected Status Chips -->
+      @if (selected_statuses.size > 0) {
+        <div class="flex flex-wrap gap-2 items-center">
+          <div class="text-sm font-medium text-gray-600">Selected:</div>
+          @for (status of selected_statuses; track status) {
+            <div class="flex items-center gap-2 bg-blue-50 border border-blue-200 px-3 py-1 rounded-full">
+              <span class="text-sm font-medium text-blue-700">{{ status }}</span>
+              <button
+                type="button"
+                (click)="removeStatusFilter(status)"
+                class="text-blue-400 hover:text-blue-600 transition"
+                aria-label="Remove filter"
+              >
+                ✕
+              </button>
+            </div>
+          }
+          <button
+            type="button"
+            (click)="resetStatus()"
+            class="text-sm text-gray-500 hover:text-gray-700 transition ml-2"
+          >
+            Clear all
+          </button>
+        </div>
       }
-    </select>
-
-    @if (searched_project.length > 0 || selected_status) {
-    <app-button
-      variant="secondary"
-      size="md"
-      type="button"
-      (click)="searched_project = ''; resetStatus()"
-    >
-      Clear Filters
-    </app-button>
-    }
+    </div>
   </div>
+
   @if (filtered_projects.length != 0) {
   <div class="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
     @for (project of filtered_projects; track project.id) {
 
     <div
-      class="group bg-white border rounded-xl h-75 p-5 flex flex-col justify-between transition hover:shadow-lg"
+      class="group bg-white border border-gray-200 rounded-xl overflow-hidden flex flex-col justify-between transition hover:shadow-lg hover:border-blue-300"
     >
-      <!-- Header -->
-      <div class="flex items-start justify-between mb-4">
-        <!-- Left Side -->
-        <div class="flex-1 min-w-0">
-          <h2 class="text-lg font-semibold tracking-tight">
-            {{ project.name }}
-          </h2>
-          <p class="text-sm text-gray-500 mt-1" [title]="project.description">
-            {{ project.description }}
-          </p>
+      <!-- Project Body with better spacing -->
+      <div class="p-5 pb-4 flex flex-col gap-4 flex-1">
+        <!-- Header with Status Badge -->
+        <div class="flex items-start justify-between gap-3">
+          <div class="flex-1 min-w-0">
+            <h2 class="text-lg font-semibold tracking-tight text-gray-900">
+              {{ project.name }}
+            </h2>
+          </div>
+          <div
+            [ngClass]="project.status | statusColor"
+            class="shrink-0 whitespace-nowrap flex items-center gap-2 px-3 py-1 rounded-full"
+          >
+            <span [ngClass]="project.status | bulletStatusColor" class="w-2 h-2 rounded-full"> </span>
+            <span class="text-xs font-medium">
+              {{ project.status }}
+            </span>
+          </div>
         </div>
 
-        <!-- Status Badge -->
-        <div
-          [ngClass]="project.status | statusColor"
-          class="shrink-0 whitespace-nowrap flex items-center gap-3 px-3 py-1 rounded-full"
-        >
-          <span [ngClass]="project.status | bulletStatusColor" class="w-3 h-3 rounded-full"> </span>
-          <span class="text-xs font-medium">
-            {{ project.status }}
-          </span>
+        <!-- Description with better visibility -->
+        <p class="text-sm text-gray-600 line-clamp-3 leading-relaxed">
+          {{ project.description }}
+        </p>
+
+        <!-- Project stats -->
+        <div class="flex gap-4 text-xs text-gray-500 pt-2 border-t border-gray-100">
+          <div class="flex items-center gap-1">
+            <span class="font-medium">{{ project.tasks.length }}</span>
+            <span>{{ project.tasks.length === 1 ? 'task' : 'tasks' }}</span>
+          </div>
+          <div class="flex items-center gap-1">
+            <span class="font-medium">{{ (project.tasks | taskCompletePipe) }}</span>
+            <span>completed</span>
+          </div>
         </div>
       </div>
 
-      <!--          &lt;!&ndash; Tasks &ndash;&gt;-->
-      <!--          <div class="mb-4">-->
-      <!--            <app-task-list [tasks]="project.tasks"></app-task-list>-->
-      <!--          </div>-->
-
-      <!-- Actions -->
-      <div class="flex items-center justify-between pt-4 border-t">
+      <!-- Actions Footer -->
+      <div class="flex items-center justify-between px-5 py-4 border-t border-gray-100 bg-gray-50 group-hover:bg-blue-50 transition">
         <app-button
           (click)="openProjectDetails(project.id)"
           variant="secondary"
@@ -78,10 +112,10 @@
           View
         </app-button>
 
-        <div class="flex items-center gap-3">
-          <app-button variant="secondary" size="md" type="button"> Edit </app-button>
+        <div class="flex items-center gap-2">
+          <app-button variant="secondary" (click)="openEditProject(project)" size="sm" type="button"> Edit </app-button>
 
-          <app-button variant="danger" size="md" type="button"> Delete </app-button>
+          <app-button variant="danger" size="sm" type="button"> Delete </app-button>
         </div>
       </div>
     </div>
@@ -96,7 +130,12 @@
 
   } @else {
   <div class="flex-1 flex items-center justify-center text-gray-500">
-    <p>No projects found.</p>
+    <div class="text-center">
+      <p class="text-lg font-medium">No projects found.</p>
+      @if (searched_project.length > 0 || selected_statuses.size > 0) {
+        <p class="text-sm mt-1">Try adjusting your filters.</p>
+      }
+    </div>
   </div>
   }
 </div>

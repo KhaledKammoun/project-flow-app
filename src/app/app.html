@@ -11,12 +11,20 @@
   <app-header [setIsAddProjectOpen]="setIsAddProjectOpen"></app-header>
 
   <div class="flex-1 overflow-auto p-4">
-    <app-project-list [addedProject]="latestAddedProject"></app-project-list>
+    <app-project-list [setIsEditProjectOpen]="setIsEditProjectOpen" [addedProject]="latestAddedProject" (projectSelected)="selectedProject = $event"></app-project-list>
     @if(isAddProjectOpen) {
       <app-add-project
         (close)="setIsAddProjectOpen(false)"
         (projectCreated)="onProjectCreated($event)"
       ></app-add-project>
+    }
+
+    @if(isEditProjectOpen) {
+      <app-edit-project
+        [project]="selectedProject"
+        (close)="setIsEditProjectOpen(false)"
+        (projectUpdated)="onProjectUpdated($event)"
+      ></app-edit-project>
     }
   </div>
 
